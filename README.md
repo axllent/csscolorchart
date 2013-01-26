@@ -9,4 +9,5 @@ I wrote it to speed up & simplify website design, whereby projects often end up 
 ##Usage
 Please see example.php
 
+##Screenshot
 ![Screenshot](https://raw.github.com/axllent/csscolorchart/master/screenshot.png)
