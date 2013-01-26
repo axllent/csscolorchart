@@ -19,4 +19,4 @@ echo $themes-&gt;listColors($cssPath);
 </pre>
 
 ##Screenshot
-![Screenshot](https://raw.github.com/axllent/csscolorchart/master/screenshot.png)
+![CSS Colour Chart screenshot](https://raw.github.com/axllent/csscolorchart/master/screenshot.png)
