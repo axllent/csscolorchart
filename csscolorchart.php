@@ -150,7 +150,7 @@ class CssColorChart {
 	 * Sort $this->matchResults by HSV values
 	 * @param Null
 	 * @return Null
-	*/
+	 */
 	protected function sortMatches() {
 		if (count($this->matchResults) == 0) return array();
 
