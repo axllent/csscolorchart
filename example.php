@@ -59,14 +59,13 @@
 	$cssPath = array('cms/');
 
 	echo '<h1>CSS colors found in: ' .
-		(is_array($cssPath)?implode($cssPath, ', '):$cssPath) . '</h1>';
+		(is_array($cssPath) ? implode($cssPath, ', ') : $cssPath) . '</h1>';
 
 	$themes = new CssColorChart;
 	$themes->ignoreFiles = array(
 		'cms/thirdparty/',
 	);
 	echo $themes->listColors($cssPath);
-
 ?>
 </body>
 </html>
