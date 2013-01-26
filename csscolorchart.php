@@ -13,6 +13,10 @@ class CssColorChart {
 
 	public $ignoreFiles = array();
 
+	/* Find, parse, and return output
+	 * @param String or Array
+  	 * @return generated HTML of colour codes
+  	*/
 	public function listColors($dir) {
 		$this->matchResults = array();
 
@@ -41,9 +45,13 @@ class CssColorChart {
 
 		$this->sortMatches();
 
-		echo $this->displayColors();
+		return $this->displayColors();
 	}
 
+	/* Returns an array of all found *.css files in path
+	 * @param String
+  	 * @return generated HTML of colour codes
+  	*/
 	protected function findCssFiles($dir, $pattern) {
 		if (is_file($dir)) return array($dir);
 		$dir = rtrim(escapeshellcmd($dir), '/');
