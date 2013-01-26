@@ -15,8 +15,8 @@ class CssColorChart {
 
 	/* Find, parse, and return output
 	 * @param String or Array
-  	 * @return generated HTML of colour codes
-  	*/
+   * @return generated HTML of colour codes
+  */
 	public function listColors($dir) {
 		$this->matchResults = array();
 
@@ -50,8 +50,8 @@ class CssColorChart {
 
 	/* Returns an array of all found *.css files in path
 	 * @param String
-  	 * @return generated HTML of colour codes
-  	*/
+	 * @return generated HTML of colour codes
+  */
 	protected function findCssFiles($dir, $pattern) {
 		if (is_file($dir)) return array($dir);
 		$dir = rtrim(escapeshellcmd($dir), '/');
@@ -63,7 +63,10 @@ class CssColorChart {
 		return $files;
 	}
 
-
+	/* Parse CSS files and build $this->matchResults
+	 * @param String
+	 * @return Null
+  */
 	protected function findColors($cssFile) {
 		$data = $this->cssPrepare(file_get_contents($cssFile));
 
@@ -138,6 +141,10 @@ class CssColorChart {
 
 	}
 
+	/* Sort $this->matchResults by HSV values
+	 * @param Null
+	 * @return Null
+	*/
 	protected function sortMatches() {
 		if (count($this->matchResults) == 0) return array();
 
@@ -151,8 +158,10 @@ class CssColorChart {
 			$sat[$k] = $v[1];
 			$val[$k] = $v[2];
 		}
+
 		//Sort in ascending order by H, then S, then V and recompile the array
-		array_multisort($hue,SORT_ASC,$sat,SORT_ASC,$val,SORT_ASC,$order);
+		array_multisort($hue, SORT_ASC, $sat, SORT_ASC, $val, SORT_ASC, $order);
+
 		$output = array();
 		foreach ($order as $k => $v) {
 			list($hue,$sat,$val) = $v;
@@ -160,15 +169,24 @@ class CssColorChart {
 			$hexcolor = $this->rgb2hex($rgb[0], $rgb[1], $rgb[2]);
 			$output[$hexcolor] = $this->matchResults[$hexcolor];
 		}
+
 		$this->matchResults = $output;
 	}
 
+	/* Add array to $this->matchResults
+	 * @param Array
+   * @return Null
+  */
 	protected function addToMatchResults($arr) {
 		$color = str_replace('#', '', $arr['color']);
 		if (!isset($this->matchResults[$color])) $this->matchResults[$color] = array();
 		array_push($this->matchResults[$color], $arr);
 	}
 
+	/* Return HTML code of $this->matchResults
+	 * @param Null
+   * @return HTML
+  */
 	protected function displayColors(){
 		$out = '';
 		foreach ($this->matchResults as $color => $matches) {
@@ -189,6 +207,10 @@ class CssColorChart {
 		return $out;
 	}
 
+	/* Clean CSS code, strip comments & format one style per line
+	 * @param String
+   * @return String
+  */
 	public function cssPrepare($buffer) {
 		$buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer); // Strip out comments
 		$buffer = str_replace(array("\r\n", "\r", "\n", "\t"), '', $buffer);
@@ -203,6 +225,10 @@ class CssColorChart {
 		return trim($buffer);
 	}
 
+	/* Convert RGB array to hexidecimal string
+	 * @param Array(red, green, blue)
+   * @return String
+  */
 	public function rgb2hex($r, $g, $b) {
 		$out = "";
 		foreach (array($r, $g, $b) as $c) {
@@ -212,6 +238,10 @@ class CssColorChart {
 		return $out;
 	}
 
+	/* Convert hexidecimal string to RGB array
+   * @param String
+   * @return Array(red, green, blue)
+  */
 	public function hex2rgb($hex) {
 		$hex = str_replace("#", "", $hex);
 
@@ -227,7 +257,11 @@ class CssColorChart {
 		return array($r, $g, $b);
 	}
 
-	public rgb2hsv($r,$g,$b) {
+	/* Convert RGB array to HSV array
+   * @param Array(red, green, blue)
+   * @return Array(hue, saturation, value)
+  */
+	public function rgb2hsv($r,$g,$b) {
 		//Convert RGB to HSV
 		$r /= 255;
 		$g /= 255;
@@ -259,6 +293,10 @@ class CssColorChart {
 		return array($h,$s,$v);
 	}
 
+	/* Convert HSV array to RGB array
+	 * @param Array(hue, saturation, value)
+   * @return Array(red, green, blue)
+  */
 	public function hsv2rgb($h,$s,$v) {
 		//Convert HSV to RGB
 		if ($s == 0) {
@@ -290,6 +328,10 @@ class CssColorChart {
 		);
 	}
 
+	/* Return an array of colour names and their hexidecimal values
+	 * @param Null
+	 * @return Array
+	*/
 	protected function genColorNames() {
 		return array(
 			"aliceblue"	=>	"#f0f8ff",
