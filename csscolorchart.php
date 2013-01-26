@@ -44,7 +44,7 @@ class CssColorChart {
 		echo $this->displayColors();
 	}
 
-	private function findCssFiles($dir, $pattern) {
+	protected function findCssFiles($dir, $pattern) {
 		if (is_file($dir)) return array($dir);
 		$dir = rtrim(escapeshellcmd($dir), '/');
 		$files = glob($dir.'/'.$pattern);
@@ -56,7 +56,7 @@ class CssColorChart {
 	}
 
 
-	private function findColors($cssFile) {
+	protected function findColors($cssFile) {
 		$data = $this->cssPrepare(file_get_contents($cssFile));
 
 		/* read line-by-line */
@@ -130,7 +130,7 @@ class CssColorChart {
 
 	}
 
-	private function sortMatches() {
+	protected function sortMatches() {
 		if (count($this->matchResults) == 0) return array();
 
 		foreach ($this->matchResults as $code => $matches) {
@@ -155,13 +155,13 @@ class CssColorChart {
 		$this->matchResults = $output;
 	}
 
-	private function addToMatchResults($arr) {
+	protected function addToMatchResults($arr) {
 		$color = str_replace('#', '', $arr['color']);
 		if (!isset($this->matchResults[$color])) $this->matchResults[$color] = array();
 		array_push($this->matchResults[$color], $arr);
 	}
 
-	private function displayColors(){
+	protected function displayColors(){
 		$out = '';
 		foreach ($this->matchResults as $color => $matches) {
 			$out .= '		<div class="colorHolder">
@@ -181,7 +181,7 @@ class CssColorChart {
 		return $out;
 	}
 
-	private function cssPrepare($buffer) {
+	public function cssPrepare($buffer) {
 		$buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer); // Strip out comments
 		$buffer = str_replace(array("\r\n", "\r", "\n", "\t"), '', $buffer);
 		$buffer = preg_replace('/\s+/', ' ', $buffer);
@@ -195,7 +195,7 @@ class CssColorChart {
 		return trim($buffer);
 	}
 
-	private function rgb2hex($r, $g, $b) {
+	public function rgb2hex($r, $g, $b) {
 		$out = "";
 		foreach (array($r, $g, $b) as $c) {
 			$hex = base_convert($c, 10, 16);
@@ -204,7 +204,7 @@ class CssColorChart {
 		return $out;
 	}
 
-	private function hex2rgb($hex) {
+	public function hex2rgb($hex) {
 		$hex = str_replace("#", "", $hex);
 
 		if (strlen($hex) == 3) {
@@ -219,7 +219,7 @@ class CssColorChart {
 		return array($r, $g, $b);
 	}
 
-	function rgb2hsv($r,$g,$b) {
+	public rgb2hsv($r,$g,$b) {
 		//Convert RGB to HSV
 		$r /= 255;
 		$g /= 255;
@@ -251,7 +251,7 @@ class CssColorChart {
 		return array($h,$s,$v);
 	}
 
-	private function hsv2rgb($h,$s,$v) {
+	public function hsv2rgb($h,$s,$v) {
 		//Convert HSV to RGB
 		if ($s == 0) {
 			$r = $g = $b = $v;
@@ -282,7 +282,7 @@ class CssColorChart {
 		);
 	}
 
-	private function genColorNames() {
+	protected function genColorNames() {
 		return array(
 			"aliceblue"	=>	"#f0f8ff",
 			"antiquewhite"	=>	"#faebd7",
