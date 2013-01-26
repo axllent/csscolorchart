@@ -4,7 +4,7 @@ CSS Colour Chart is a PHP script to generate a chart of all your CSS files from 
 It scans all paths for *.css files, parses each CSS file to find all uses of hexadecimal, RGB, RBGA and color names,
 and produces an html colour chart to show you the colours you have used and the files using them.
 
-##What is it's purpose?
+##What is its purpose?
 I wrote it to speed up & simplify website design, whereby projects often end up with a range of similar colours in
 a multitude of separate CSS files, rather than sticking to a set array of basic colours.
 
