@@ -65,7 +65,7 @@
 	$themes->ignoreFiles = array(
 		'cms/thirdparty/',
 	);
-	$themes->listColors($cssPath);
+	echo $themes->listColors($cssPath);
 
 ?>
 </body>
