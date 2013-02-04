@@ -14,12 +14,12 @@ class CssColorChart {
 	/*
 	 * list of files that are not included (e.g. /var/www/webroot/themes/myfile.css)
 	 * @var Array
-	 */	 
+	 */
 	public $ignoreFiles = array();
 
 	/**
 	 * Find, parse, and return output
-	 * @param String | Array $dir 
+	 * @param String | Array $dir
 	 * @return String generated HTML of colour codes
 	 */
 	public function listColors($dir) {
@@ -51,6 +51,58 @@ class CssColorChart {
 		$this->sortMatches();
 
 		return $this->displayColors();
+	}
+
+
+	/*
+	 * list of colours that will be replaced using
+	 * the replaceColours Method
+	 * Example:
+	 * Array("#ffffff" => "#000000", "red" => "blue");
+	 * this will turn white into black and red into blue.
+	 * @var Array
+	 */
+	public $replaceColoursArray = array();
+
+	/**
+	 * Find, parse, and return output
+	 * @param String | Array $dir
+	 * @return String - generated HTML of colour codes
+	 */
+	public function replaceColours($dir) {
+		$this->matchResults = array();
+
+		//find files
+		$cssFiles = array();
+		if (!is_array($dir)) {
+			$dir = array($dir);
+		}
+		foreach ($dir as $d) {
+			$cssFiles = array_merge($cssFiles, $this->findCssFiles($d, '*.css'));
+		}
+		$this->colorNames = $this->genColorNames();
+
+		//setup files to ignore
+		$ignore = array();
+		foreach ($this->ignoreFiles as $i) {
+			$ignore[] = preg_quote($i, '/');
+		}
+		$ignoreRegex = '('.implode($ignore, '|').')';
+
+		echo "<h1>Starting replacement</h1><ul>";
+		foreach ($cssFiles as $cssFile) {
+			if (strlen($ignoreRegex) == 2 || !preg_match('/'.$ignoreRegex.'/', $cssFile)) {
+				$from = array_keys($this->replaceColoursArray);
+				$to = $this->replaceColoursArray;
+				$oldFileContents = file_get_contents($cssFile);
+				$newFileContents = str_replace($from, $to, $oldFileContents);
+				if($oldFileContents != $newFileContents) {
+					echo "<li>replacing ".implode(", ", $from)." to ".implode(", ", $to)." in $cssFile</li>";
+					file_put_contents($cssFile,$newFileContents);
+				}
+			}
+		}
+		echo "</ul><h1>Ending replacement</h1>";
 	}
 
 	/* Returns an array of all found *.css files in path
@@ -201,7 +253,6 @@ class CssColorChart {
 			<div class="colorSwatch" style="background-color: #'.$color.'" onclick="ViewFiles(\''.$color.'\')"></div>
 			<div class="colorName">#'.$color.'</div>
 			<div class="colorToggle"><a href="javascript:ViewFiles(\''.$color.'\')">view '.count($matches).' matches</a></div>
-			</div>
 			<div class="colorMatches" id="matches_'.$color.'">';
 			foreach ($matches as $match){
 				$out .= '<span class="colorFilename">'.$match['stylesheet']."</span>\n";
@@ -209,7 +260,7 @@ class CssColorChart {
 					'<span class="colorProperty">'.htmlspecialchars($match['property']).'</span>: ' .
 					'<span class="colorValue">'.htmlspecialchars($match['value'])."</span>;\n\t}\n";
 			}
-			$out .= '</div>';
+			$out .= '</div></div>';
 		}
 		return $out;
 	}
@@ -339,6 +390,7 @@ class CssColorChart {
 			(integer) ($b * 255 + 0.5)
 		);
 	}
+
 
 	/**
 	 * Return an array of colour names and their hexidecimal values
