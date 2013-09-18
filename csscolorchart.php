@@ -61,9 +61,12 @@ class CssColorChart {
 		if (is_file($dir)) return array($dir);
 		$dir = rtrim(escapeshellcmd($dir), '/');
 		$files = glob($dir.'/'.$pattern);
-		foreach (glob("$dir/{.[^.]*,*}", GLOB_BRACE|GLOB_ONLYDIR) as $sub_dir) {
-			$arr   = $this->findCssFiles($sub_dir, $pattern);
-			$files = array_merge($files, $arr);
+		$subDirs = glob("$dir/{.[^.]*,*}", GLOB_BRACE|GLOB_ONLYDIR);
+		if($subDirs && is_array($subDirs)) {
+			foreach ($subDirs as $subDir) {
+				$arr   = $this->findCssFiles($subDir, $pattern);
+				$files = array_merge($files, $arr);
+			}
 		}
 		return $files;
 	}
